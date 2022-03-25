@@ -115,10 +115,8 @@ def reward_alert() -> None:
        popup if reward 
     """
     root = tk.Tk()
+    root.attributes('-topmost', 1)
     root.withdraw()
-    messagebox.showwarning(
-            'You got a Reward!', 
-            'Close when you\'re ready to start the timer again')
-
+    messagebox.showwarning('You got a Reward!', 'Close to start the timer again')
 
 main()
