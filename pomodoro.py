@@ -1,7 +1,7 @@
 """
     A timer + RNG for skinnerian reinforcement.
 
-    User input: 
+    User input:
         1. a way to start the timer
         2. a way to specify how long each task is
         3. a way to reset session history
@@ -11,7 +11,7 @@
         2. an alert if you get the reward
         3. a history of the session
 
-    Usage: 
+    Usage:
         pomodoro.py [options]
 
     Options:
@@ -69,8 +69,9 @@ def print_timer(seconds_left: int) -> None:
     """
         prints to the console how much time is left
     """
-
-    print(seconds_left, end='\r')
+    minutes, seconds = divmod(seconds_left, 60)
+    min_sec_format = '{:02d}:{:02d}'.format(minutes, seconds)
+    print(min_sec_format, end='\r')
 
 
 def check_reward(reward_prob: float) -> bool:
@@ -112,12 +113,12 @@ def get_reward_probability(config_contents: dict) -> float:
 
 def reward_alert() -> None:
     """
-       popup if reward 
+       popup if reward
     """
     root = tk.Tk()
     root.withdraw()
     messagebox.showwarning(
-            'You got a Reward!', 
+            'You got a Reward!',
             'Close when you\'re ready to start the timer again')
 
 
