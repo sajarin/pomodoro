@@ -1,7 +1,7 @@
 """
     A timer + RNG for skinnerian reinforcement.
 
-    User input: 
+    User input:
         1. a way to start the timer
         2. a way to specify how long each task is
         3. a way to reset session history
@@ -11,7 +11,7 @@
         2. an alert if you get the reward
         3. a history of the session
 
-    Usage: 
+    Usage:
         pomodoro.py [options]
 
     Options:
@@ -21,6 +21,7 @@
 
 import time
 import random
+import argparse
 import tkinter as tk
 from tkinter import messagebox
 
@@ -29,6 +30,7 @@ def main():
     """
         Output: gui
     """
+    handle_args()
     config_contents = {
             'length_of_tasks_in_minutes': 0,
             'num_of_tasks_done': 0
@@ -38,7 +40,8 @@ def main():
         lines = []
         for line in handle:
             lines.append(line.split(",")[1].strip())
-        print(lines)
+        print("Time between each session:", lines[0], "\n# of sessions done:",
+              lines[1])
         config_contents['length_of_tasks_in_minutes'] = float(lines[0])
         config_contents['num_of_tasks_done'] = int(lines[1])
 
@@ -55,6 +58,13 @@ def main():
             reward_alert()
 
 
+def handle_args() -> None:
+    # handle script arguments
+    parser = argparse.ArgumentParser(description='A timer + rng for skinnerian\
+                                     reinforcement')
+    args = parser.parse_args()
+
+
 def run_timer(seconds: int) -> None:
     """
         decrement seconds and pass to print_timer()
@@ -69,8 +79,9 @@ def print_timer(seconds_left: int) -> None:
     """
         prints to the console how much time is left
     """
-
-    print(seconds_left, end='\r')
+    minutes, seconds = divmod(seconds_left, 60)
+    min_sec_format = '{:02d}:{:02d}'.format(minutes, seconds)
+    print(min_sec_format, end='\r')
 
 
 def check_reward(reward_prob: float) -> bool:
@@ -112,12 +123,12 @@ def get_reward_probability(config_contents: dict) -> float:
 
 def reward_alert() -> None:
     """
-       popup if reward 
+       popup if reward
     """
     root = tk.Tk()
     root.withdraw()
     messagebox.showwarning(
-            'You got a Reward!', 
+            'You got a Reward!',
             'Close when you\'re ready to start the timer again')
 
 
