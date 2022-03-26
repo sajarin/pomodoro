@@ -21,6 +21,7 @@
 
 import time
 import random
+import argparse
 import tkinter as tk
 from tkinter import messagebox
 
@@ -29,6 +30,7 @@ def main():
     """
         Output: gui
     """
+    handle_args()
     config_contents = {
             'length_of_tasks_in_minutes': 0,
             'num_of_tasks_done': 0
@@ -38,7 +40,8 @@ def main():
         lines = []
         for line in handle:
             lines.append(line.split(",")[1].strip())
-        print(lines)
+        print("Time between each session:", lines[0], "\n# of sessions done:",
+              lines[1])
         config_contents['length_of_tasks_in_minutes'] = float(lines[0])
         config_contents['num_of_tasks_done'] = int(lines[1])
 
@@ -53,6 +56,13 @@ def main():
         is_reward = check_reward(reward_prob)
         if is_reward:
             reward_alert()
+
+
+def handle_args() -> None:
+    # handle script arguments
+    parser = argparse.ArgumentParser(description='A timer + rng for skinnerian\
+                                     reinforcement')
+    args = parser.parse_args()
 
 
 def run_timer(seconds: int) -> None:
