@@ -16,7 +16,6 @@
 
     Options:
         -h, --help  Show this help message and exit
-        --version   Show version and exit
 """
 
 import os
@@ -113,7 +112,6 @@ def check_reward(reward_prob: float) -> bool:
     """
         returns true if rng < reward_prob
     """
-
     rng = random.random()
     if rng < reward_prob:
         return True
@@ -195,6 +193,7 @@ def reward_alert() -> None:
        popup if reward
     """
     root = tk.Tk()
+    root.attributes('-topmost')
     root.withdraw()
     messagebox.showwarning(
             'You got a Reward!',
