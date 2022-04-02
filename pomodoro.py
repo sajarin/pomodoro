@@ -193,7 +193,7 @@ def reward_alert() -> None:
        popup if reward
     """
     root = tk.Tk()
-    root.attributes('-topmost')
+    root.attributes('-topmost', 1)
     root.withdraw()
     messagebox.showwarning(
             'You got a Reward!',
