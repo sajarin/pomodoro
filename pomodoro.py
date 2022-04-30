@@ -181,10 +181,10 @@ def get_reward_probability(config_contents: dict) -> float:
                 irregardless of the decay function)
     """
 
-    task_length_in_seconds = config_contents['length_of_tasks_in_minutes']
+    task_length_in_minutes = config_contents['length_of_tasks_in_minutes']
     num_of_tasks_done = config_contents['num_of_tasks_done']
-    total_time_spent = task_length_in_seconds*num_of_tasks_done / 60
-    reward_prob = -0.00792 * total_time_spent + 1
+    total_time_spent_in_hours = task_length_in_minutes*num_of_tasks_done / 60
+    reward_prob = -0.00792 * total_time_spent_in_hours + 1
     return reward_prob
 
 
