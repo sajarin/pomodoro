@@ -177,8 +177,12 @@ def get_reward_probability(config_contents: dict) -> float:
         returns the probability of a reward given number of tasks done
 
         n.b assuming 4hrs * 30d = 120hrs to habit formation, reward prob should
-        be close to zero after 120 hours worth of tasks has passed (this is
+        be close to zero (~5%) after 120 hours worth of tasks has passed (this is
                 irregardless of the decay function)
+                
+        0.05 = slope*total_time_spent_in_hours + 1
+        (for daily case: total_time_spent_in_hours = 4)
+        then solve for slope
     """
 
     task_length_in_minutes = config_contents['length_of_tasks_in_minutes']
