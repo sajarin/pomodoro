@@ -34,7 +34,8 @@ def main():
     handle_args()
     config_contents = {
             'length_of_tasks_in_minutes': 0,
-            'num_of_tasks_done': 0
+            'num_of_tasks_done': 0,
+            'daily_decay': False
             }
     stats_contents = {
             'datetime': "",
@@ -47,12 +48,12 @@ def main():
         for line in handle:
             lines.append(line.split(",")[1].strip())
         print("Time between each session:", lines[0], "\n# of sessions done:",
-              lines[1])
+                lines[1], "\n Daily Decay Mode:", lines[2])
         config_contents['length_of_tasks_in_minutes'] = float(lines[0])
         config_contents['num_of_tasks_done'] = int(lines[1])
+        config_contents['daily_decay'] = lines[2].upper() == 'TRUE'
 
-    task_length_in_seconds = int(
-            60*config_contents['length_of_tasks_in_minutes'])
+    task_length_in_seconds = int(60*config_contents['length_of_tasks_in_minutes'])
 
     with open(stats, "r") as handle:
         lines = []
@@ -76,7 +77,7 @@ def main():
                                                           'num_of_tasks_done'])
         # set new date to today's to avoid duplication of log entries
         stats_contents['datetime'] = date.today().strftime("%m/%d/%y")
-        reward_prob = get_reward_probability(config_contents)
+        reward_prob = get_reward_probability(config_contents, stats_contents)
         is_reward = check_reward(reward_prob)
         if is_reward:
             reward_alert()
@@ -172,7 +173,7 @@ def truncate_last_line_in_file(filename: str) -> None:
             handle.truncate()
 
 
-def get_reward_probability(config_contents: dict) -> float:
+def get_reward_probability(config_contents: dict, stats_contents: dict) -> float:
     """
         returns the probability of a reward given number of tasks done
 
@@ -185,10 +186,20 @@ def get_reward_probability(config_contents: dict) -> float:
         then solve for slope
     """
 
+    decay_goal = 0.05
+    if config_contents['daily_decay'] is True:
+        total_decay_time_in_hours = 4
+        num_of_tasks_done = stats_contents['num_of_tasks_done']
+    else: 
+        total_decay_time_in_hours = 120
+        num_of_tasks_done = config_contents['num_of_tasks_done']
+    decay_slope = (decay_goal - 1) / total_decay_time_in_hours
+
     task_length_in_minutes = config_contents['length_of_tasks_in_minutes']
-    num_of_tasks_done = config_contents['num_of_tasks_done']
     total_time_spent_in_hours = task_length_in_minutes*num_of_tasks_done / 60
-    reward_prob = -0.00792 * total_time_spent_in_hours + 1
+    reward_prob = decay_slope * total_time_spent_in_hours + 1
+    # print("This is the decay slope: ", decay_slope)
+    # print("This is the reward prob: ", reward_prob)
     return reward_prob
 
 
